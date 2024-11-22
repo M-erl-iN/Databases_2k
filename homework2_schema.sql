@@ -62,10 +62,10 @@ create table institute
 create table "group"
 (
     id           bigserial primary key,
-    number       int unique not null,
-    course       numeric(2) check ( course > 0 and course < 12 ),
-    institute_id bigint references institute (id),
-    unique (institute_id, number)
+    number       int unique not null, -- -> студент может быть во многих группах -> name(vc)
+    course       numeric(2) check ( course > 0 and course < 12 ), -- -> year of start
+    institute_id bigint references institute (id) not null,
+    unique (institute_id, number, course)
 );
 
 create table student
@@ -77,8 +77,8 @@ create table student
     phone            numeric(11) not null check ( phone >= 1000000000 ) unique,
     email            varchar(70) not null unique,
     entry_year       smallint check ( entry_year > 1900 ),
-    personal_info_id bigint references personal_info (id),
-    group_id         bigint references "group" (id)
+    personal_info_id bigint references personal_info (id) not null,
+    group_id         bigint references "group" (id) not null -- not notnull
 );
 
 create table teacher
